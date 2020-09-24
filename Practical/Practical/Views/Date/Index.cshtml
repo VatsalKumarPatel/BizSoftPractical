@@ -1,0 +1,100 @@
+﻿<div class="form-group">
+    <div class="row">
+        <div class="col-4">
+            <label class="control-label">From Date</label>
+        </div>
+        <div class="col-4">
+            <input type="date" id="from-date" class="form-control" />
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-4">
+            <label class="control-label">To Date</label>
+        </div>
+        <div class="col-4">
+            <input type="date" id="to-date" class="form-control" />
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-4">
+            <label class="control-label">Day</label>
+        </div>
+        <div class="col-4">
+            <select id="day">
+                <option value="0"> Sunday</option>
+                <option value="1"> Monday</option>
+                <option value="2"> Tuesday</option>
+                <option value="3"> Wednesday</option>
+                <option value="4"> Thrusday</option>
+                <option value="5"> Friday</option>
+                <option value="6"> Saturday</option>
+                
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <input type="button" onclick="GenerateDate()" value="Generate Dates" />
+</div>
+
+<div id="generated-date"></div>
+@section Scripts{
+
+    <script>
+        Date.prototype.addDays = function (days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
+
+        function getDaysBetweenDates(start, end, day) {
+            var result = [];
+            var current = new Date(start);
+            current.setDate(current.getDate() + (day - current.getDay() + 7) % 7);
+            while (current < end) {
+                var date = new Date(+current);
+                var test = date.toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'short', year: 'numeric'
+                }).replace(/ /g, '-');
+                result.push(test);
+                current.setDate(current.getDate() + 14);
+            }
+            return result;
+        }
+
+        function GenerateDate() {
+            var from = $("#from-date").val();
+            if (from == null || from == undefined || from == "") {
+                $("#generated-date").html("From date is not valid");
+                return;
+            }
+            var fromDate = new Date(from);
+
+            var to = $("#to-date").val();
+            if (to == null || to == undefined || to == "") {
+                $("#generated-date").html("To date is not valid");
+                return;
+            }
+            var toDate = new Date(to);
+
+            if (fromDate >= toDate) {
+                $("#generated-date").html("From date can not be greater than To date");
+                return;
+            }
+
+            var date = $("#day").val();
+            var data = getDaysBetweenDates(fromDate, toDate, date);
+            var html = "<b>Result : " + data.length + '</b><br />';
+            data.forEach(function (e) {
+                html += e + '<br />';
+            });
+            $("#generated-date").html(html);
+        }
+         
+    </script>
+}

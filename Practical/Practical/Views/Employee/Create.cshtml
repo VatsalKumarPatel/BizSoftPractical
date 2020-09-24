@@ -1,0 +1,97 @@
+@model Practical.Models.Employee
+
+@{
+    ViewData["Title"] = ViewData["Method"] + "Employee";
+}
+
+<h2>@ViewData["Method"]</h2>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form id="employee-create" asp-action="Create">
+            <div id="ValidationSummary" class="text-danger"></div>
+            <input type="hidden" asp-for="EmployeeId" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="EmployeeName" class="control-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="EmployeeName" class="form-control" />
+                        <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="Department" class="control-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="DepartmentId" class="form-control"   asp-items="@((List<SelectListItem>)ViewData["DepartmentList"])">
+                            <option value="0">Pick one</option>
+                        </select>
+                        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="Address" class="control-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="BirthDate" class="control-label"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="date" asp-for="BirthDate" class="form-control" />
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="Sex" class="control-label"></label>
+                    </div>
+                    <div class="col-8">
+                        @foreach (var gender in Enum.GetValues(typeof(Practical.Enums.Gender)))
+                        {
+                    @if ((int)Model.Sex == (int)@gender)
+                    {
+                        <input type="radio" asp-for="Sex" value="@((int)gender)" checked />@gender<br />
+                    }
+                    else
+                    {
+                    <input type="radio" asp-for="Sex" value="@((int)gender)" />@gender<br />}}
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        Active
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="IsActive" class="form-control" />      
+                    </div>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <input type="button" value="Create" onclick="SaveData('@Url.Action("Create", "Employee")','employee-create')" class="btn btn-info" />
+            </div>
+        </form>
+    </div>
+</div>
+
+ 

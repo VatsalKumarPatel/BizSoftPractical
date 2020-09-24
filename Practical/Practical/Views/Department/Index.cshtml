@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Practical.Models.DepartmentWisEmployeeCountModel>
+
+@{ ViewData["Title"] = "Index"; }
+
+<h2>Department Employee List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DepartmentName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActiveEmployeeCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InActiveEmployeeCount)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActiveEmployeeCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InActiveEmployeeCount)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

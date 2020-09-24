@@ -1,0 +1,138 @@
+@using Practical.Enums;
+@model  PagedList<EmployeeListModel>
+
+@{ ViewData["Title"] = "Employee"; }
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("EmployeeName", "Index", new { order = (int)EmployeePageSort.EmployeeName, sortType = (int)ViewBag.SortType, sortChange = true })
+            </th>
+            <th>
+                @Html.ActionLink("Department", "Index", new { order = (int)EmployeePageSort.Department, sortType = (int)ViewBag.SortType, sortChange = true })
+            </th>
+            <th>
+                Age
+            </th>
+            <th>
+                @Html.ActionLink("Sex", "Index", new { order = (int)EmployeePageSort.Sex, sortType = (int)ViewBag.SortType, sortChange = true })
+            </th>
+            <th>
+                @Html.ActionLink("Active", "Index", new { order = (int)EmployeePageSort.Active, sortType = (int)ViewBag.SortType, sortChange = true })
+            </th>
+            <th> Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Content)
+        {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.EmployeeName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Department)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Age)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Sex)
+    </td>
+    <td>
+        @if (item.IsActive)
+        {
+    <span class="dot bg-green "></span> }
+                    else
+                    {
+    <span class="dot "></span>}
+    </td>
+    <td>
+        <a class="btn"
+           href="javascript:void(0);" onclick="EditEmployee(@item.EmployeeId)">
+            Edit
+        </a> |
+        <a class="btn"
+           href="javascript:void(0);" onclick="DeleteEmployee(@item.EmployeeId)">
+            Delete
+        </a>
+    </td>
+</tr>}
+    </tbody>
+</table>
+Page @(Model.TotalPages < Model.CurrentPage ? 0 : Model.CurrentPage) of @Model.TotalPages <br /><br /><br />
+@for(int i=1; i<=Model.TotalPages; i++)
+{
+
+    <div class="pagebox" >
+    @if (Model.CurrentPage == i)
+    {
+     <text>   @i</text>
+    }
+    else
+    {
+    @Html.ActionLink(@i.ToString(), "Index", new { order = (int)ViewBag.order, sortType = (int)ViewBag.SortType, page = @i })
+    }</div> 
+}
+
+<div id="test">
+    <div class="modal fade" id="edit-employee" tabindex="-1" role="dialog" aria-labelledby="addemployeelable" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addemployeelable">Edit Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="edit-employee-model-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delete-employee" tabindex="-1" role="dialog" aria-labelledby="addemployeelable" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addemployeelable">Delete Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="delete-employe-model-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+    function EditEmployee(id) {
+        GetView("@Url.Action("Edit","Employee")/" + id, "edit-employee-model-body", "edit-employee")
+    }
+
+    function DeleteEmployee(id) {
+        GetView("@Url.Action("Delete","Employee")/" + id, "delete-employe-model-body", "delete-employee")
+    }
+
+    function GetView(url, placeholder, modelId) {
+        $.get(url).done(function (data) {
+            $("#" + placeholder).html(data);
+            $("#" + modelId).modal('show');
+        });
+    }
+    </script>
+}
